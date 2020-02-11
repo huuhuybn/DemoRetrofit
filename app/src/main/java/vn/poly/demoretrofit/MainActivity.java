@@ -35,7 +35,7 @@ public class MainActivity extends AppCompatActivity {
         DemoService demoService = DemoRetrofit
                 .getInstance().create(DemoService.class);
 
-        demoService.getUserInfo("1").enqueue(new Callback<ResponseBody>() {
+        demoService.getUserInfo("2").enqueue(new Callback<ResponseBody>() {
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
                 TextView tvData = findViewById(R.id.tvData);
@@ -49,7 +49,6 @@ public class MainActivity extends AppCompatActivity {
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
-
             }
 
             @Override
@@ -61,6 +60,31 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void httpPost(View view) {
+        DemoService demoService = DemoRetrofit
+                .getInstance().create(DemoService.class);
+
+        demoService.createUser("1","Hello","Huy Nguyen")
+                .enqueue(new Callback<ResponseBody>() {
+            @Override
+            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                TextView tvData = findViewById(R.id.tvData);
+                String data = null;
+                try {
+                    data = response.body().string();
+                    if (data != null) {
+                        tvData.setText(
+                                data);
+                    }
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ResponseBody> call, Throwable t) {
+
+            }
+        });
 
     }
 }
