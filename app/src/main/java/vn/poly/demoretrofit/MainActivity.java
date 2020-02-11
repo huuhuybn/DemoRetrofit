@@ -6,6 +6,9 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.TextView;
 
+import java.io.IOException;
+
+import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -32,17 +35,25 @@ public class MainActivity extends AppCompatActivity {
         DemoService demoService = DemoRetrofit
                 .getInstance().create(DemoService.class);
 
-        demoService.getUserInfo("1").enqueue(new Callback<String>() {
+        demoService.getUserInfo("1").enqueue(new Callback<ResponseBody>() {
             @Override
-            public void onResponse(Call<String> call, Response<String> response) {
+            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
                 TextView tvData = findViewById(R.id.tvData);
-                if (response.body() != null) {
-                    tvData.setText(response.body());
+                String data = null;
+                try {
+                    data = response.body().string();
+                    if (data != null) {
+                        tvData.setText(
+                                data);
+                    }
+                } catch (IOException e) {
+                    e.printStackTrace();
                 }
+
             }
 
             @Override
-            public void onFailure(Call<String> call, Throwable t) {
+            public void onFailure(Call<ResponseBody> call, Throwable t) {
 
             }
         });
